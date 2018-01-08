@@ -1,5 +1,5 @@
 import numpy as np
-import h5py
+#import h5py
 import matplotlib.pyplot as plt
 
 def linearBackward(dZ,cache):

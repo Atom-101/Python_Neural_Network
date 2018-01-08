@@ -1,5 +1,5 @@
 import numpy as np
-import h5py
+#import h5py
 import matplotlib.pyplot as plt
 from Activations import sigmoid,relu
 from linearForward import linearForward
