@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from linearActivationBackward import linearActivationBackward
 
-def L_model_backward(AL,Y,caches):
+def L_model_backward(AL,Y,caches,parameters,lambd):
 	
 	m = Y.shape[1]
 	grads ={}
@@ -13,12 +13,6 @@ def L_model_backward(AL,Y,caches):
 	dAL = -(1/m)*(np.divide(Y,AL)-np.divide(1-Y,1-AL)) #for cross-entropy error
 	dAL = np.nan_to_num(dAL)
 	
-	"""
-	P = np.argmax(AL,axis=0)+1
-	C = -1*((Y**-P**2)>0) # define control array with value -1 wherever (Y^2-P^2)>0
-	C[C==0] = 1 #replace all zeros in control to 1
-	
-	dAL = -(2/m)*np.multiply(P,C) # derivative of (1/m)*|Y^2-P^2|"""	
 	
 	current_cache = caches[L-1]
 	grads["dA" + str(L)], grads["dW"+str(L)], grads["db"+str(L)] = linearActivationBackward(dAL, current_cache,"sigmoid")
@@ -27,5 +21,8 @@ def L_model_backward(AL,Y,caches):
 		#caches vary from 0 to L-1, grads vary from 1 to L
 		current_cache = caches[l]
 		grads["dA" + str(l+1)], grads["dW"+str(l+1)], grads["db"+str(l+1)] = linearActivationBackward(grads["dA"+str(l+2)], current_cache,"relu")
+		
+	for l in range(1,len(parameters)//2+1):
+		grads["dW" + str(l)]+= (lambd/m)*parameters["W"+str(l)]
 	
 	return grads
